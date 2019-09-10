@@ -18,7 +18,7 @@ module.exports = (io) => {
                         if (finish) {
                             await helper.updateOrAddFile(sendData, reqData.fileName);
                             io.sockets.connected[reqData.socketId].emit('file-read-finish', true)
-                        };
+                        }
                         io.sockets.connected[reqData.socketId].emit('file-analytics', sendData);
                     }
                 }
@@ -33,16 +33,14 @@ module.exports = (io) => {
                 if (io.sockets.connected[reqData.socketId]) {
                     if (finish) {
                         await helper.updateOrAddFile(sendData, reqData.fileName);
-                        io.sockets.connected[reqData.socketId].emit('file-analytics', sendData);
                         io.sockets.connected[reqData.socketId].emit('file-read-finish', true);
-                    } else {
-                        io.sockets.connected[reqData.socketId].emit('file-analytics', sendData);
-                    }
+                    } 
+                    io.sockets.connected[reqData.socketId].emit('file-analytics', sendData);
                 }
-            } catch(err) {
+            } catch (err) {
                 console.log('Error is: ', err);
             }
-            
+
         })
 
         socket.on('disconnect', () => {
