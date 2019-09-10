@@ -46,8 +46,6 @@ const self = module.exports = {
             console.log(tempData.substring(tempData.length - 100, tempData.length));
             allItemsAre = JSON.parse(tempData);
         }
-
-        console.log('All items are2: ', allItemsAre.length)
         return true;
     },
 

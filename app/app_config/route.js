@@ -11,7 +11,8 @@ module.exports = () => {
 
     //all get request
     router.get('/all_thermo', controller.getAllThermometer);
-    
+    router.get('/thermo_detail/:thermo_name', controller.getThermometerDetails);
+
     return router;
 }
 

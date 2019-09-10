@@ -11,7 +11,7 @@ module.exports = () => {
     mongoose.connection.once('open', () => {
         console.log('Connected to mongodb!');
     });
-    mongoose.connection.on('error', () => {
+    mongoose.connection.on('error', (err) => {
         console.error(`Mongoose default connection error: ${err}`);
     });
 

@@ -35,6 +35,8 @@ module.exports = (io) => {
                         await helper.updateOrAddFile(sendData, reqData.fileName);
                         io.sockets.connected[reqData.socketId].emit('file-analytics', sendData);
                         io.sockets.connected[reqData.socketId].emit('file-read-finish', true);
+                    } else {
+                        io.sockets.connected[reqData.socketId].emit('file-analytics', sendData);
                     }
                 }
             } catch(err) {

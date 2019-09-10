@@ -35,15 +35,25 @@ module.exports = {
 
     getAllThermometer: async (req, res) => {
         try {
-            const data = await Thermometers.find({})
-                .populate({
-                    path: 'year_details',
-                    model: 'YearDetils'
-                })
+            const data = await Thermometers.find({}).sort({ _id: -1 });
             return res.status(200).send({ data: data });
         } catch (err) {
             console.log('Error is: ', err);
             return res.status(500).send({ message: 'Something went wrong!' });
+        }
+    },
+
+    getThermometerDetails: async (req, res) => {
+        try {
+            console.log('Thermo name: ', req.params.thermo_name);
+            const data = await Thermometers.findOne({ name: req.params.thermo_name }).populate({
+                path: 'year_details',
+                model: 'YearDetils'
+            }).lean();
+            return res.status(200).send({ data: data });
+        } catch (err) {
+            console.log('Error is: ', err);
+            return res.status(404).send({ err: 'Something went wrong' });
         }
     }
 }
