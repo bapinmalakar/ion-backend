@@ -4,10 +4,8 @@ module.exports = (io) => {
     io.on('connection', (socket) => {
         console.log('Socket id is: ', socket.id);
         socket.emit('my-socket-id', socket.id);
-        global.current_id = socket.id;
 
         socket.on('process-my-file', async (reqData) => {
-            console.log('Process Data request made: ', reqData.socketId, reqData.fileName);
             try {
                 const fileExist = helper.readDataFromFile(reqData.fileName);
                 if (!fileExist) {
@@ -23,7 +21,7 @@ module.exports = (io) => {
                     }
                 }
             } catch (err) {
-                console.log('sOCKET Error is: ', err);
+                console.log('Socket error is: ', err);
             }
         })
 
@@ -45,7 +43,6 @@ module.exports = (io) => {
 
         socket.on('disconnect', () => {
             console.log('Socket is disconnect with id: ', socket.id);
-            global.current_id = '';
         })
     })
 }

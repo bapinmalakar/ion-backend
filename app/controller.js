@@ -18,9 +18,9 @@ const upload = multer({ storage: storage }).any();
 
 module.exports = {
     uploadThermoFile: async (req, res, next) => {
+        //upload new thermometer file and save to local for process
         const files = fs.readdirSync(path.resolve(__dirname, './../uploads'));
         for (let file of files) {
-            console.log('delete file: ', file);
             fs.unlinkSync(path.resolve(__dirname, `./../uploads/${file}`));
         }
 
@@ -35,7 +35,8 @@ module.exports = {
 
     getAllThermometer: async (req, res) => {
         try {
-            const data = await Thermometers.find({}).sort({ _id: -1 });
+            //function for get the list of thermometer in DESC order
+            const data = await Thermometers.find({},{_id: 1, name: 1}).sort({ _id: -1 });
             return res.status(200).send({ data: data });
         } catch (err) {
             console.log('Error is: ', err);
@@ -45,7 +46,7 @@ module.exports = {
 
     getThermometerDetails: async (req, res) => {
         try {
-            console.log('Thermo name: ', req.params.thermo_name);
+            //get details of a thermometer by name
             const data = await Thermometers.findOne({ name: req.params.thermo_name }).populate({
                 path: 'year_details',
                 model: 'YearDetils'

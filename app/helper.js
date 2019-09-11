@@ -10,11 +10,11 @@ let allItemsAre = [];
 
 const self = module.exports = {
     readDataFromFile: (fileName) => {
+        //read data from uploaded file save in local and create output file as temporary storage
         const obj = {
             years: []
         };
         const fileExit = fs.existsSync(path.resolve(__dirname, `./../uploads/${fileName}.json`));
-        console.log('fileExit: ', fileExit);
         if (!fileExit) {
             return false;
         }
@@ -30,7 +30,6 @@ const self = module.exports = {
         }
 
         if (tempData[i] == ']' || tempData[i] == '}') {
-            console.log('Ok fine data');
             if (tempData[i] == '}')
                 tempData = tempData + ']';
             allItemsAre = JSON.parse(tempData);
@@ -43,13 +42,13 @@ const self = module.exports = {
             }
             tempData = tempData.substring(0, i + 1);
             tempData = tempData + ']';
-            console.log(tempData.substring(tempData.length - 100, tempData.length));
             allItemsAre = JSON.parse(tempData);
         }
         return true;
     },
 
     analyticsProcess: (start = 0, limit = 10000) => {
+        //process your thermometer data, as chunk of 10,000 element each time
         let analyticsObject = fs.readFileSync(path.resolve(__dirname, './../uploads/output_file.json'));
         analyticsObject = JSON.parse(Buffer.from(analyticsObject).toString());
         const processingData = allItemsAre.splice(start, limit);
@@ -84,6 +83,7 @@ const self = module.exports = {
     },
 
     getMonthName: (month) => {
+        //get month name
         return {
             '0': 'Jan',
             '1': 'Feb',
@@ -101,6 +101,7 @@ const self = module.exports = {
     },
 
     updateOrAddFile: async (analytics, fileName) => {
+        //delete the data of thermometer if exist, and add new thermometer
         const fileData = await Thermometers.findOne({ name: fileName }).lean();
         if (fileData) {
             const taskList = [Thermometers.remove({ _id: fileData._id }), YearDetils.remove({ thermometer: fileData._id })];
@@ -114,7 +115,6 @@ const self = module.exports = {
 
         const taskList = [];
         for (let year of analytics.years) {
-            console.log('Create 1');
             const saveYearData = new YearDetils();
             saveYearData['days'] = analytics[year].days;
             saveYearData['months'] = analytics[year].months;
@@ -125,7 +125,6 @@ const self = module.exports = {
         }
 
         const yearData = await Promise.all(taskList);
-        console.log('Year data is: ', yearData);
 
         const yearDetails = yearData.map(d => d._id);
         await Thermometers.updateOne({ _id: thermodata._id }, { $set: { year_details: yearDetails } });
